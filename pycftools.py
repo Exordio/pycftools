@@ -85,27 +85,27 @@ class CfToolsApi(object):
     def cftools_api_get_grants(self):
         print('Getting grants...')
         grants = self.__api_cftools_session.get(self.__api_cftools_get_grants_url, headers=self.__api_cftools_headers)
-        print(grants.text)
+        return grants
 
     def cftools_api_get_server_details(self):
         server_details = self.__api_cftools_session.get(self.__api_cftools_api_get_server_details_url,
                                                         headers=self.__api_cftools_headers)
-        print(server_details.text)
+        return server_details
 
     def cftools_api_get_server_info(self):
         server_info = self.__api_cftools_session.get(self.__api_cftools_get_server_info_url,
                                                      headers=self.__api_cftools_headers)
-        print(server_info.text)
+        return server_info
 
     def cftools_api_get_server_statistics(self):
         server_info = self.__api_cftools_session.get(self.__api_cftools_get_server_statistics_url,
                                                      headers=self.__api_cftools_headers)
-        print(server_info.text)
+        return server_info
 
     def cftools_api_get_server_list(self):
         server_player_list = self.__api_cftools_session.get(self.__api_cftools_get_server_player_list_url,
                                                             headers=self.__api_cftools_headers)
-        print(server_player_list.text)
+        return server_player_list
 
     def cftools_api_server_kick(self, gs_id, resaon):
         payload = {
@@ -114,7 +114,7 @@ class CfToolsApi(object):
         }
         server_player_kick = self.__api_cftools_session.post(self.__api_cftools_post_server_kick_url, data=payload,
                                                              headers=self.__api_cftools_headers)
-        print(server_player_kick.status_code)
+        return server_player_kick
 
     def cftools_api_server_private_message(self, gs_id, content):
         payload = {
@@ -123,7 +123,7 @@ class CfToolsApi(object):
         }
         server_private_message = self.__api_cftools_session.post(self.__api_cftools_post_server_private_message_url,
                                                                  data=payload, headers=self.__api_cftools_headers)
-        print(server_private_message.status_code)
+        return server_private_message
 
     def cftools_api_server_public_message(self, content):
         payload = {
@@ -139,7 +139,7 @@ class CfToolsApi(object):
         }
         server_row_rcon_command = self.__api_cftools_session.post(self.__api_cftools_post_server_row_rcon_command_url,
                                                                   data=payload, headers=self.__api_cftools_headers)
-        print(server_row_rcon_command.status_code)
+        return server_row_rcon_command
 
     def cftools_api_server_teleport(self, gs_id, coords):
         payload = {
@@ -148,7 +148,7 @@ class CfToolsApi(object):
         }
         server_teleport = self.__api_cftools_session.post(self.__api_cftools_post_server_teleport_url,
                                                           data=payload, headers=self.__api_cftools_headers)
-        print(server_teleport.status_code)
+        return server_teleport
 
     def cftools_api_server_spawn(self, gs_id, obj_name, quantity):
         payload = {
@@ -158,7 +158,7 @@ class CfToolsApi(object):
         }
         server_spawn = self.__api_cftools_session.post(self.__api_cftools_post_server_spawn_url, data=payload,
                                                        headers=self.__api_cftools_headers)
-        print(server_spawn.status_code)
+        return server_spawn
 
     def cftools_api_server_queue_priority_list(self, cftools_id, comment):
         payload = {
@@ -168,7 +168,7 @@ class CfToolsApi(object):
         server_queue_priority_list = self.__api_cftools_session.get(self.__api_cftools_server_queue_priority_url,
                                                                     params=payload,
                                                                     headers=self.__api_cftools_headers)
-        print(server_queue_priority_list.text)
+        return server_queue_priority_list
 
     def cftools_api_server_queue_priority_entry(self, cftools_id, expires_at, comment):
         payload = {
@@ -179,7 +179,7 @@ class CfToolsApi(object):
         server_queue_priority_entry = self.__api_cftools_session.post(self.__api_cftools_server_queue_priority_url,
                                                                       data=payload,
                                                                       headers=self.__api_cftools_headers)
-        print(server_queue_priority_entry.status_code)
+        return server_queue_priority_entry
 
     def cftools_api_server_queue_priority_delete_entry(self, cftools_id):
         payload = {
@@ -188,7 +188,7 @@ class CfToolsApi(object):
         server_queue_priority_delete = self.__api_cftools_session.delete(self.__api_cftools_server_queue_priority_url,
                                                                          data=payload,
                                                                          headers=self.__api_cftools_headers)
-        print(server_queue_priority_delete.status_code)
+        return server_queue_priority_delete
 
     def cftools_api_server_whitelist(self, cftools_id, comment):
         payload = {
@@ -198,7 +198,7 @@ class CfToolsApi(object):
         server_whitelist = self.__api_cftools_session.get(self.__api_cftools_server_whitelist_url,
                                                           params=payload,
                                                           headers=self.__api_cftools_headers)
-        print(server_whitelist.text)
+        return server_whitelist
 
     def cftools_api_server_whitelist_entry(self, cftools_id, expires_at, comment):
         payload = {
@@ -208,7 +208,7 @@ class CfToolsApi(object):
         }
         server_whitelist_entry = self.__api_cftools_session.post(self.__api_cftools_server_whitelist_url, data=payload,
                                                                  headers=self.__api_cftools_headers)
-        print(server_whitelist_entry.status_code)
+        return server_whitelist_entry
 
     def cftools_api_server_whitelist_delete_entry(self, cftools_id):
         payload = {
@@ -217,7 +217,7 @@ class CfToolsApi(object):
         server_whitelist_delete_entry = self.__api_cftools_session.delete(self.__api_cftools_server_whitelist_url,
                                                                           data=payload,
                                                                           headers=self.__api_cftools_headers)
-        print(server_whitelist_delete_entry.status_code)
+        return server_whitelist_delete_entry
 
     def cftools_api_server_leaderboard(self, stat, order, limit):
         # stat : one of [kills, deaths, suicides, playtime, longest_kill, longest_shot, kdratio]
@@ -231,7 +231,7 @@ class CfToolsApi(object):
         }
         server_leaderboard = self.__api_cftools_session.get(self.__api_cftools_server_leaderboard_url, params=payload,
                                                             headers=self.__api_cftools_headers)
-        print(server_leaderboard.text)
+        return server_leaderboard
 
     def cftools_api_server_player_stats(self, cftools_id):
         payload = {
@@ -239,13 +239,13 @@ class CfToolsApi(object):
         }
         server_player_stats = self.__api_cftools_session.get(self.__api_cftools_server_player_stats_url, params=payload,
                                                              headers=self.__api_cftools_headers)
-        print(server_player_stats.text)
+        return server_player_stats
 
     # TODO Не понятно почему ничего не возвращает.
     def cftools_api_server_banlist(self):
         server_banlist = self.__api_cftools_session.get(self.__api_cftools_server_banlist_url,
                                                         headers=self.__api_cftools_headers)
-        print(server_banlist.text)
+        return server_banlist
 
     def cftools_api_server_ban(self, frmt, identifier, expires_at, reason):
         # format : cftools_id or ipv4
@@ -260,7 +260,7 @@ class CfToolsApi(object):
         }
         server_ban = self.__api_cftools_session.post(self.__api_cftools_server_banlist_url, data=payload,
                                                      headers=self.__api_cftools_headers)
-        print(server_ban.status_code)
+        return server_ban
 
     def cftools_api_server_lookup(self, identifier):
         payload = {
@@ -268,7 +268,7 @@ class CfToolsApi(object):
         }
         server_lookup = self.__api_cftools_session.get(self.__api_cftools_server_lookup_url, params=payload,
                                                        headers=self.__api_cftools_headers)
-        print(server_lookup.text)
+        return server_lookup
 
     def cftools_api_server_unban(self, ban_id):
         payload = {
@@ -276,7 +276,7 @@ class CfToolsApi(object):
         }
         server_unban = self.__api_cftools_session.delete(self.__api_cftools_server_banlist_url, data=payload,
                                                          headers=self.__api_cftools_headers)
-        print(server_unban.status_code)
+        return server_unban
 
     @staticmethod
     def __create_server_id_hash(game_identifier, ip, game_port):
