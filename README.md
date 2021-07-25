@@ -7,7 +7,7 @@ https://developer.cftools.cloud/documentation/data-api
 ## Installation
 
 ```
-pip istall pycftools
+pip install pycftools
 ```
 
 ## Dependencies
