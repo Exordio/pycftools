@@ -72,8 +72,8 @@ The ability to automate some processes, and getting access to the application fr
 The library provides all the methods from the cftools documentation. 
 Request parameters are completely identical to those presented in the documentation.
 
-### All methods of the class return response objects, this is done for the convenience of further control.
-### You need to work with them as with ordinary responses to requests. json(), text, status_code, etc...
+#### All methods of the class return response objects, this is done for the convenience of further control.
+#### You need to work with them as with ordinary responses to requests. json(), text, status_code, etc...
 ## If you don't know how to work with response objects. Read the documentation for the requests module.
 
 ## Authentication
