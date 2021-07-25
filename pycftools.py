@@ -103,18 +103,23 @@ class CfToolsApi(object):
         self.__timestamp_delta = timestamp_delta
 
     # ---------------- Save/load tokens part ----------------
+
     def cftools_api_check_register(self):
         print('Cf tools auth...') if self.__pycftools_debug else None
-        if os.path.exists(self.__cftools_token_file):
-            print('Token file found') if self.__pycftools_debug else None
-            self.cftools_load_auth_bearer_token()
-        else:
-            print('File with token not finded, creating new.') if self.__pycftools_debug else None
-            self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
-            self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+        try:
+            if os.path.exists(self.__cftools_token_file):
+                print('Token file found') if self.__pycftools_debug else None
+                self.cftools_load_auth_bearer_token()
+            else:
+                print('File with token not finded, creating new.') if self.__pycftools_debug else None
+                self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
+                self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
 
-        print('Token loaded') if self.__pycftools_debug else None
-        return True
+            print('Token loaded') if self.__pycftools_debug else None
+            return True
+        except Exception as err:
+            print(err)
+            return False
 
     def cftools_save_auth_bearer_token(self, token):
         with open(self.__cftools_token_file, 'wb') as conf_file:
