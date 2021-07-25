@@ -109,10 +109,10 @@ class CfToolsApi(object):
         try:
             if os.path.exists(self.__cftools_token_file):
                 print('Token file found') if self.__pycftools_debug else None
-                self.cftools_load_auth_bearer_token()
+                self.__cftools_load_auth_bearer_token()
             else:
                 print('File with token not finded, creating new.') if self.__pycftools_debug else None
-                self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
+                self.__cftools_save_auth_bearer_token(self.__cftools_api_get_auth_bearer_token())
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
 
             print('Token loaded') if self.__pycftools_debug else None
@@ -121,7 +121,7 @@ class CfToolsApi(object):
             print(err)
             return False
 
-    def cftools_save_auth_bearer_token(self, token):
+    def __cftools_save_auth_bearer_token(self, token):
         with open(self.__cftools_token_file, 'wb') as conf_file:
             to_save_data = {
                 'token': token,
@@ -129,7 +129,7 @@ class CfToolsApi(object):
             }
             pickle.dump(to_save_data, conf_file)
 
-    def cftools_check_token_timestamp(self, timestamp):
+    def __cftools_check_token_timestamp(self, timestamp):
         if (timestamp + self.__timestamp_delta) <= datetime.datetime.now().timestamp():
             print('Auth token is outdated, need to get a new one') if self.__pycftools_debug else None
             return True
@@ -137,20 +137,20 @@ class CfToolsApi(object):
             print('Auth token is not outdated') if self.__pycftools_debug else None
             return False
 
-    def cftools_load_auth_bearer_token(self):
+    def __cftools_load_auth_bearer_token(self):
         with open(self.__cftools_token_file, 'rb') as conf_file:
             try:
                 to_load_data = pickle.load(conf_file)
-                if self.cftools_check_token_timestamp(to_load_data['timestamp']):
-                    self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
+                if self.__cftools_check_token_timestamp(to_load_data['timestamp']):
+                    self.__cftools_save_auth_bearer_token(self.__cftools_api_get_auth_bearer_token())
                     self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
                 else:
                     self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
             except EOFError:
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
-                self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
+                self.__cftools_save_auth_bearer_token(self.__cftools_api_get_auth_bearer_token())
 
-    def cftools_api_get_auth_bearer_token(self):
+    def __cftools_api_get_auth_bearer_token(self):
         payload = {
             'application_id': self.__application_id,
             'secret': self.__application_secret
