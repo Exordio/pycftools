@@ -40,7 +40,6 @@ else:
 ## Constructor arguments
 
 ```
-
 Class CfToolsApi used to access various cftools api methods.
 The main use, getting access to api.
 The ability to automate some processes, and getting access to the application from outside.
@@ -57,13 +56,16 @@ The ability to automate some processes, and getting access to the application fr
 :type game_port: str
 :param server_id: Server_api_id this is the global server identifier and it can be found in the server API settings.
 :type server_id: str
-:param server_banlist_id: Server_banlist_id is global banlist identifier, it can be found in ban-manager https://app.cftools.cloud/ban-manager - see for Banlist ID.
+:param server_banlist_id: Server_banlist_id is global banlist identifier
+ It can be found in ban-manager https://app.cftools.cloud/ban-manager - see for Banlist ID.
 :type server_banlist_id: str
 :param auth_token_filename: Auth_token_filename this is the filename var for auth token file.
 :type auth_token_filename: str
 :param pycftools_debug: This is the variable for enabling debug outputs from the program.
 :type pycftools_debug: bool
-
+:param timestamp_delta: This is the time offset delta when the token in the file needs to be updated. 
+ By default, the value is set to half a day - 43200. UNIXTIMESTAMP
+:type timestamp_delta: int
 ```
 
 
