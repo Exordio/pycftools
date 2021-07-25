@@ -19,7 +19,7 @@ Basic usage:
 import pycftools
 
 cfapi = pycftools.CfToolsApi(app_id='',
-                             app_secret='=', game_identifier='',
+                             app_secret='', game_identifier='',
                              ip='', game_port='',
                              server_id='',
                              server_banlist_id='')
