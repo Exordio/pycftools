@@ -10,10 +10,9 @@ https://developer.cftools.cloud/documentation/data-api
 pip install pycftools
 ```
 
-## Dependencies
 
 
-Basic usage:
+## Basic usage:
 
 ```python
 import pycftools
