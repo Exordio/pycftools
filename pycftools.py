@@ -168,8 +168,7 @@ class CfToolsApi(object):
 
     def cftools_api_get_grants(self):
         print('Getting grants...') if self.__pycftools_debug else None
-        grants = self.__api_cftools_session.get(self.__api_cftools_get_grants_url, headers=self.__api_cftools_headers)
-        return grants
+        return self.__api_cftools_session.get(self.__api_cftools_get_grants_url, headers=self.__api_cftools_headers)
 
     def cftools_api_get_server_details(self):
         return self.__api_cftools_session.get(self.__api_cftools_api_get_server_details_url,
@@ -328,4 +327,3 @@ class CfToolsApi(object):
 
     def close(self):
         self.__api_cftools_session.close()
-
