@@ -7,7 +7,7 @@ import os
 
 class CfToolsApi(object):
     def __init__(self, app_id, app_secret, game_identifier, ip, game_port, server_id, server_banlist_id,
-                 auth_token_filename='token.raw', pycftools_debug=False):
+                 auth_token_filename='token.raw', pycftools_debug=False, timestamp_delta=43200):
         """
         Class CfToolsApi used to access various cftools api methods.
         The main use, getting access to api.
@@ -31,6 +31,8 @@ class CfToolsApi(object):
         :type auth_token_filename: str
         :param pycftools_debug: This is the variable for enabling debug outputs from the program.
         :type pycftools_debug: bool
+        :param timestamp_delta: This is the time offset delta when the token in the file needs to be updated. By default, the value is set to half a day - 43200. UNIXTIMESTAMP
+        :type timestamp_delta: int
         """
 
         self.__pycftools_debug = pycftools_debug
@@ -94,9 +96,11 @@ class CfToolsApi(object):
 
         self.__api_cftools_session = requests.Session()
         self.__api_cftools_bearer_token = None
+
         self.__api_cftools_headers = {}
 
         self.__cftools_token_file = auth_token_filename
+        self.__timestamp_delta = timestamp_delta
 
     # ---------------- Save/load tokens part ----------------
     def cftools_api_check_register(self):
@@ -121,7 +125,7 @@ class CfToolsApi(object):
             pickle.dump(to_save_data, conf_file)
 
     def cftools_check_token_timestamp(self, timestamp):
-        if (timestamp + 43200) <= datetime.datetime.now().timestamp():
+        if (timestamp + self.__timestamp_delta) <= datetime.datetime.now().timestamp():
             print('Auth token is outdated, need to get a new one') if self.__pycftools_debug else None
             return True
         else:
@@ -138,8 +142,8 @@ class CfToolsApi(object):
                 else:
                     self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
             except EOFError:
-                self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
 
     def cftools_api_get_auth_bearer_token(self):
         payload = {
