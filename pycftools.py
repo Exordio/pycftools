@@ -1,9 +1,13 @@
+import datetime
 import requests
 import hashlib
+import pickle
+import os
 
 
 class CfToolsApi(object):
-    def __init__(self, app_id, app_secret, game_identifier, ip, game_port, server_api_id, server_banlist_id):
+    def __init__(self, app_id, app_secret, game_identifier, ip, game_port, server_api_id, server_banlist_id,
+                 auth_bearer_token=None, auth_token_filename='token.raw'):
         self.__application_id = app_id
         self.__application_secret = app_secret
         self.__api_cftools_server_id_hash = self.__create_server_id_hash(game_identifier, ip, game_port)
@@ -63,11 +67,54 @@ class CfToolsApi(object):
         self.__api_cftools_server_lookup_url = ''.join([self.__api_cftools_public_api_url, '/v1/users/lookup'])
 
         self.__api_cftools_session = requests.Session()
-        self.__api_cftools_bearer_token = None
+        self.__api_cftools_bearer_token = auth_bearer_token
         self.__api_cftools_headers = {}
 
-    def cftools_api_register(self):
+        self.__cftools_token_file = auth_token_filename
+
+    def cftools_api_check_register(self):
         print('Cf tools auth...')
+        if os.path.exists(self.__cftools_token_file):
+            print('Token file found')
+            self.cftools_load_auth_bearer_token()
+        else:
+            print('File with token not finded, creating new.')
+            self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
+            self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+
+        print('Token loaded')
+        return True
+
+    def cftools_save_auth_bearer_token(self, token):
+        with open(self.__cftools_token_file, 'wb') as conf_file:
+            to_save_data = {
+                'token': token,
+                'timestamp': datetime.datetime.now().timestamp()
+            }
+            pickle.dump(to_save_data, conf_file)
+
+    def cftools_load_auth_bearer_token(self):
+        def check_timestamp(timestamp):
+            if (timestamp + 43200) <= datetime.datetime.now().timestamp():
+                print('Auth token is outdated, need to get a new one')
+                return True
+            else:
+                print('Auth token is not outdated')
+                return False
+
+        with open(self.__cftools_token_file, 'rb') as conf_file:
+            try:
+                to_load_data = pickle.load(conf_file)
+                if check_timestamp(to_load_data['timestamp']):
+                    self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
+                    self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                else:
+                    self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
+            except EOFError:
+                self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
+                self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+
+    def cftools_api_get_auth_bearer_token(self):
         payload = {
             'application_id': self.__application_id,
             'secret': self.__application_secret
@@ -75,12 +122,11 @@ class CfToolsApi(object):
         reg_data = self.__api_cftools_session.post(self.__api_cftools_authentication_url, data=payload)
         if reg_data.status_code == 200:
             self.__api_cftools_bearer_token = reg_data.json()['token']
-            self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
-            print('Auth token received. ')
-            return True
+            print('Auth token received.')
+            return self.__api_cftools_bearer_token
         else:
-            print(f'Auth token not received. status {reg_data.status_code}')
-            return False
+            print(f'Auth error reg_data status code : {reg_data.status_code}')
+            assert False
 
     def cftools_api_get_grants(self):
         print('Getting grants...')
@@ -98,9 +144,9 @@ class CfToolsApi(object):
         return server_info
 
     def cftools_api_get_server_statistics(self):
-        server_info = self.__api_cftools_session.get(self.__api_cftools_get_server_statistics_url,
+        server_statistics = self.__api_cftools_session.get(self.__api_cftools_get_server_statistics_url,
                                                      headers=self.__api_cftools_headers)
-        return server_info
+        return server_statistics
 
     def cftools_api_get_server_list(self):
         server_player_list = self.__api_cftools_session.get(self.__api_cftools_get_server_player_list_url,
@@ -241,7 +287,6 @@ class CfToolsApi(object):
                                                              headers=self.__api_cftools_headers)
         return server_player_stats
 
-    # TODO Не понятно почему ничего не возвращает.
     def cftools_api_server_banlist(self):
         server_banlist = self.__api_cftools_session.get(self.__api_cftools_server_banlist_url,
                                                         headers=self.__api_cftools_headers)
