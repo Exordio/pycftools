@@ -36,7 +36,7 @@ class CfToolsApi(object):
         self.__pycftools_debug = pycftools_debug
         self.__application_id = app_id
         self.__application_secret = app_secret
-        self.__api_cftools_server_id_hash = self.__create_server_id_hash(game_identifier, ip, game_port)
+        self.__api_cftools_server_id_hash = self._create_server_id_hash(game_identifier, ip, game_port)
         self.__api_cftools_server_id = server_id
         # General public api url
         self.__api_cftools_public_api_url = 'https://data.cftools.cloud'
@@ -100,7 +100,7 @@ class CfToolsApi(object):
 
     # ---------------- Save/load tokens part ----------------
     def cftools_api_check_register(self):
-        print('Cf tools auth...')
+        print('Cf tools auth...') if self.__pycftools_debug else None
         if os.path.exists(self.__cftools_token_file):
             print('Token file found') if self.__pycftools_debug else None
             self.cftools_load_auth_bearer_token()
@@ -109,7 +109,7 @@ class CfToolsApi(object):
             self.cftools_save_auth_bearer_token(self.cftools_api_get_auth_bearer_token())
             self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
 
-        print('Token loaded')
+        print('Token loaded') if self.__pycftools_debug else None
         return True
 
     def cftools_save_auth_bearer_token(self, token):
@@ -313,6 +313,10 @@ class CfToolsApi(object):
                                               headers=self.__api_cftools_headers)
 
     @staticmethod
-    def __create_server_id_hash(game_identifier, ip, game_port):
+    def _create_server_id_hash(game_identifier, ip, game_port):
         server_id_substring = ''.join([game_identifier, ip, game_port])
         return hashlib.sha1(str.encode(server_id_substring)).hexdigest()
+
+    def close(self):
+        self.__api_cftools_session.close()
+
