@@ -147,8 +147,8 @@ class CfToolsApi(object):
                 else:
                     self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
             except EOFError:
-                self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
                 self.__cftools_save_auth_bearer_token(self.__cftools_api_get_auth_bearer_token())
+                self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
 
     def __cftools_api_get_auth_bearer_token(self):
         payload = {
