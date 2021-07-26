@@ -90,8 +90,7 @@ cfapi.check_register()
 
 ## Auth
 
-```
-
+```python
 check_register()
 
 This method is needed to check if we have an up-to-date authorization token.
@@ -114,7 +113,7 @@ Note:
 
 ## Grant process and access permissions
 
-```
+```python
 [GET] grants() 
 
 Get list of all grants and their respective id's.
@@ -141,7 +140,7 @@ Get server details by Server Id. Server id server id is specified in the class c
 
 ## Server
 
-```
+```python
 [GET] server_info()
 
 Get general information about the registered server.
@@ -309,7 +308,7 @@ Note:
 
 ## Banlist
 
-```
+```python
 [GET] server_banlist(flt) 
 Get a list of all bans. Streamed response.
 
@@ -343,7 +342,7 @@ Revoke an existing ban.
 
 ## Users
 
-```
+```python
 [GET] server_lookup_user(identifier)
 Search CFTools Cloud database for a user.
 
@@ -351,12 +350,11 @@ Search CFTools Cloud database for a user.
 :type identifier: str
 :return: Json response with information about user.
 :rtype: Response
-
 ```
 
 ### If u needed to close session
 
-```
+```python
 cfapi.close()
 Method to close a session.
 ```
