@@ -98,6 +98,15 @@ class CfToolsApi(object):
         If such is found, it checks the relevance of the token and loads if everything is correct.
         Else asks for a new one, and automatically sets / saves.
 
+        Note:
+            Saving a token to a file is the simplest thing that came to my mind.
+            Perhaps there is some kind of security threat from this.
+            Write to issues on github to discuss :)
+
+            Saving the token to a file makes it possible not to request a new token -
+            every time after the object is re-created.
+            Moreover, there is a delay of 2 requests per minute.
+
         :return: return True if all auth moments is OK. else False.
         :rtype: bool
         """
