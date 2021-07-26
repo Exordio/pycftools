@@ -142,7 +142,6 @@ Get server details by Server Id. Server id server id is specified in the class c
 
 ```python
 [GET] server_info()
-
 Get general information about the registered server.
 :return: Information about the registered server
 :rtype: Response
