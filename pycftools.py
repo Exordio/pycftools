@@ -6,7 +6,7 @@ import os
 
 
 class CfToolsApi(object):
-    def __init__(self, app_id, app_secret, game_identifier, ip, game_port, server_id, server_banlist_id,
+    def __init__(self, app_id, app_secret, game_identifier, ip, game_port, server_api_id, server_banlist_id,
                  auth_token_filename='token.raw', pycftools_debug=False, timestamp_delta=43200):
         """
         Class CfToolsApi used to access various cftools api methods.
@@ -23,8 +23,8 @@ class CfToolsApi(object):
         :type ip: str
         :param game_port: Game_port is needed to create server id.
         :type game_port: str
-        :param server_id: Server_api_id this is the global server identifier and it can be found in the server API settings.
-        :type server_id: str
+        :param server_api_id: Server_api_id this is the global server identifier and it can be found in the server API settings.
+        :type server_api_id: str
         :param server_banlist_id: Server_banlist_id is global banlist identifier, it can be found in ban-manager https://app.cftools.cloud/ban-manager - see for Banlist ID.
         :type server_banlist_id: str
         :param auth_token_filename: Auth_token_filename this is the filename var for auth token file.
@@ -39,7 +39,7 @@ class CfToolsApi(object):
         self.__application_id = app_id
         self.__application_secret = app_secret
         self.__api_cftools_server_id_hash = self._create_server_id_hash(game_identifier, ip, game_port)
-        self.__api_cftools_server_id = server_id
+        self.__api_cftools_server_api_id = server_api_id
 
         # General public api url
         self.__api_cftools_public_api_url = 'https://data.cftools.cloud'
@@ -51,31 +51,31 @@ class CfToolsApi(object):
         self.__api_cftools_api_get_server_details_url = ''.join(
             [self.__api_cftools_public_api_url, f'/v1/gameserver/{self.__api_cftools_server_id_hash}'])
         self.__api_cftools_get_server_info_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/info'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/info'])
         self.__api_cftools_get_server_statistics_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/statistics'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/statistics'])
         self.__api_cftools_get_server_player_list_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/GSM/list'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/GSM/list'])
         self.__api_cftools_post_server_kick_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/kick'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/kick'])
         self.__api_cftools_post_server_private_message_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/message-private'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/message-private'])
         self.__api_cftools_post_server_public_message_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/message-server'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/message-server'])
         self.__api_cftools_post_server_row_rcon_command_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/raw'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/raw'])
         self.__api_cftools_post_server_teleport_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v0/server/{self.__api_cftools_server_id}/gameLabs/teleport'])
+            [self.__api_cftools_public_api_url, f'/v0/server/{self.__api_cftools_server_api_id}/gameLabs/teleport'])
         self.__api_cftools_post_server_spawn_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v0/server/{self.__api_cftools_server_id}/gameLabs/spawn'])
+            [self.__api_cftools_public_api_url, f'/v0/server/{self.__api_cftools_server_api_id}/gameLabs/spawn'])
         self.__api_cftools_server_queue_priority_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/queuepriority'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/queuepriority'])
         self.__api_cftools_server_whitelist_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/whitelist'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/whitelist'])
         self.__api_cftools_server_leaderboard_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/leaderboard'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/leaderboard'])
         self.__api_cftools_server_player_stats_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_id}/player'])
+            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/player'])
         self.__api_cftools_server_banlist_url = ''.join(
             [self.__api_cftools_public_api_url, f'/v1/banlist/{server_banlist_id}/bans'])
         self.__api_cftools_server_lookup_url = ''.join([self.__api_cftools_public_api_url, '/v1/users/lookup'])
@@ -129,6 +129,7 @@ class CfToolsApi(object):
     def __cftools_save_auth_bearer_token(self, token):
         """
         Method to save token to file.
+
         :param token: Auth bearer token.
         :type token: str
         """
