@@ -39,7 +39,7 @@ else:
 
 ## Constructor arguments
 
-```
+```python
 Class CfToolsApi used to access various cftools api methods.
 The main use, getting access to api.
 The ability to automate some processes, and getting access to the application from outside.
