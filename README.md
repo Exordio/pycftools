@@ -4,6 +4,8 @@ This library provides access to all cftools api methods. It is a kind of wrapper
 
 https://developer.cftools.cloud/documentation/data-api
 
+For each library method. A verbose docstring has been written.
+
 ## Installation
 
 ```
