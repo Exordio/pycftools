@@ -29,12 +29,11 @@ cfapi = pycftools.CfToolsApi(app_id='',
 # The library itself will add the token to the session headers
 # All you need to do is create an instance of the class with all the parameters.
 # And run the registration method.
-if cfapi.cftools_api_check_register():
+if cfapi.check_register():
     print('OK')
-    cfapi.cftools_api_get_grants()
+    cfapi.grants()
 else:
     print('Something not OK')
-
 
 ```
 
@@ -80,73 +79,286 @@ Request parameters are completely identical to those presented in the documentat
 ## Authentication
 
 ```python
-cfapi = pycftools.CfToolsApi(--->...<---)
+cfapi = pycftools.CfToolsApi(--->... < ---)
 # Before working with methods, you need to get a token
 # The library itself will add the token to the session headers
 # All you need to do is create an instance of the class with all the parameters.
 # And run the registration method.
-cfapi.cftools_api_check_register()
+cfapi.check_register()
 # After receiving the token, you get access to all methods
+```
+
+## Auth
+
+```
+
+check_register()
+
+This method is needed to check if we have an up-to-date authorization token.
+It checks if there is a file with a token inside.
+If such is found, it checks the relevance of the token and loads if everything is correct.
+Else asks for a new one, and automatically sets / saves.
+
+Note:
+    Saving a token to a file is the simplest thing that came to my mind.
+    Perhaps there is some kind of security threat from this.
+    Write to issues on github to discuss :)
+
+    Saving the token to a file makes it possible not to request a new token -
+    every time after the object is re-created.
+    Moreover, there is a delay of 2 requests per minute.
+
+:return: return True if all auth moments is OK. else False.
+:rtype: bool
 ```
 
 ## Grant process and access permissions
 
-```python
-[GET] cftools_api_get_grants() 
+```
+[GET] grants() 
+
+Get list of all grants and their respective id's.
+
+Note:
+    MAX REQUESTS: 1/MINUTE
+
+:return: List of all grants and their respective id's.
+:rtype: Response
 ```
 
 ## Game-Server
 
-```python
+```
 # The library itself creates the serverID (sha1 -> hexdigest) from the game id, ipv4, gameport
 
-[GET] cftools_api_get_server_details() 
+[GET] server_details()
+
+Get server details by Server Id. Server id server id is specified in the class constructor.
+
+:return: Server details by Server Id.
+:rtype: Response
 ```
 
 ## Server
 
-```python
-[GET] cftools_api_get_server_info()
-[GET] cftools_api_get_server_statistics()
-[GET] cftools_api_get_server_list()
-[POST] cftools_api_server_kick(gs_id, reason) # gamesession_id, reason. -> str
-[POST] cftools_api_server_private_message(gs_id, content) # gamesession_id, content. -> str
-[POST] cftools_api_server_public_message(content) # content -> str
-[POST] cftools_api_server_row_rcon_command(command) # command -> str
-[POST] cftools_api_server_teleport(gs_id, coords) # gamesession_id -> str, coords -> [X,Y] -> list
-[POST] cftools_api_server_spawn(gs_id, obj_name, quantity) # gamesession_id, obj_name -> str, quantity -> int
+```
+[GET] server_info()
 
-# SEE CFTOOLS DOCS TO MORE INFORMATION ABOUT PARAMS
-[GET] cftools_api_server_queue_priority_list(cftools_id, comment)
-[POST] cftools_api_server_queue_priority_entry(cftools_id, expires_at, comment)
-[DELETE] cftools_api_server_queue_priority_delete_entry(cftools_id)
+Get general information about the registered server.
+:return: Information about the registered server
+:rtype: Response
 
-[GET] cftools_api_server_whitelist(cftools_id, comment)
-[POST] cftools_api_server_whitelist_entry(cftools_id, expires_at, comment)
-[DELETE] cftools_api_server_whitelist_delete_entry(cftools_id)
+[GET] server_statistics()
+Get server statistics.
 
-[GET] cftools_api_server_leaderboard(stat, order, limit)
-[GET] cftools_api_server_player_stats(cftools_id)
+:return: Server statistics.
+:rtype: Response
+
+[GET] server_player_list()
+Get full player list.
+
+:return: Full player list.
+:rtype: Response
+
+[POST] server_kick(gs_id, reason) # gamesession_id, reason. -> str
+Kick a player.
+
+:param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+:type gs_id: str
+:param resaon: Reason 1-128 len max.
+:type resaon: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[POST] server_private_message(gs_id, content) # gamesession_id, content. -> str
+Send a private message to a player.
+
+:param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+:type gs_id: str
+:param content: Message content length: 1-256.
+:type content: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[POST] server_public_message(content) # content -> str
+Send a public message to the server.
+
+:param content: Message content length: 1-256.
+:type content: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[POST] server_row_rcon_command(command) # command -> str
+Send a raw RCon command to the server.
+
+:param command: Command length: 1-256.
+:type command: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[POST] server_teleport(gs_id, coords) # gamesession_id -> str, coords -> [X,Y] -> list
+Teleport a player GameLabs required Not all games supported.
+
+:param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+:type gs_id: str
+:param coords: Coordinates list{2}: [X, Y]
+:type coords: list
+:return: Returns 204 on success.
+:rtype: Response
+
+[POST] server_spawn(gs_id, obj_name, quantity) # gamesession_id, obj_name -> str, quantity -> int
+Spawn an object for player GameLabs required Not all games supported.
+
+:param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+:type gs_id: str
+:param obj_name: Object string.
+:type obj_name: str
+:param quantity: Quantity 1-9999 High quantities will lag a server.
+:type quantity: int
+:return: Returns 204 on success.
+:rtype: Response
+
+[GET] server_queue_priority_list(cftools_id, comment)
+Get a list of all queue priority entries Streamed response.
+
+:param cftools_id: CFTools ID
+:type cftools_id: str
+:param comment: Comment string.
+:type comment: str
+:return: List of all queue priority entries.
+:rtype: Response
+
+[POST] server_queue_priority_entry(cftools_id, expires_at, comment)
+Create a new queue priority entry.
+
+:param cftools_id: A CFTools account id.
+:type cftools_id: str
+:param expires_at: Expiration datetime object or null; Null is a permanent entry.
+:type expires_at: str
+:param comment: A note or comment.
+:type comment: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[DELETE] queue_priority_delete_entry(cftools_id)
+Delete an existing queue priority entry.
+
+:param cftools_id: A CFTools account id.
+:type cftools_id: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[GET] server_whitelist(cftools_id, comment)
+Get a list of all whitelist entries Streamed response.
+
+:param cftools_id: CFTools ID
+:type cftools_id: str
+:param comment: Comment string.
+:type comment: str
+:return: List of all whitelist entries.
+:rtype: Response
+
+[POST] server_whitelist_entry(cftools_id, expires_at, comment)
+Create a new whitelist entry.
+
+:param cftools_id: A CFTools account id.
+:type cftools_id: str
+:param expires_at: Expiration datetime object or null; Null is a permanent entry.
+:type expires_at: str
+:param comment: A note or comment.
+:type comment: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[DELETE] server_whitelist_delete_entry(cftools_id)
+Delete an existing whitelist entry.
+
+:param cftools_id: A CFTools account id.
+:type cftools_id: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[GET] server_leaderboard(stat, order, limit)
+Request the generation of a leaderboard based on internally kept player stats.
+This may fail if no stats are present.
+
+Note:
+    MAX REQUESTS: 7/MINUTE
+
+:param stat: One of kills deaths suicides playtime longest_kill longest_shot kdratio
+:type stat: str
+:param order: 1 (Ascending) or -1 (Descending)
+:type order: int
+:param limit: An integer between 1 and 100; Defaults to 10
+:type limit: int
+:return: Leaderboard based on internally kept player stats.
+:rtype: Response
+
+[GET] server_player_stats(cftools_id)
+Individual stats of a player for a server.
+
+Note:
+    MAX REQUESTS: 10/MINUTE
+
+:param cftools_id: A CFTools account id.
+:type cftools_id: str
+:return: Individual stats of a player.
+:rtype: Response
+
 ```
 
 ## Banlist
 
-```python
-[GET] cftools_api_server_banlist() 
-[POST] cftools_api_server_ban(frmt, identifier, expires_at, reason)
-[DELETE] cftools_api_server_unban(ban_id)
+```
+[GET] server_banlist(flt) 
+Get a list of all bans. Streamed response.
+
+:param flt: Either an IPv4 or a CFTools account id
+:type flt: str
+:return: List of all bans.
+:rtype: Response
+
+[POST] server_ban(frmt, identifier, expires_at, reason)
+Issue a new ban. Triggers an in-game kick.
+
+:param frmt: cftools_id or ipv4.
+:type frmt: str
+:param identifier: A CFTools account id or an IPv4; IPv4 may contain wildcard substitutes in form of an asteriks.
+:type identifier: str
+:param expires_at: Expiration datetime object or null; Null is a permanent entry.
+:type expires_at: str
+:param reason: A ban reason,
+:type reason: str
+:return: Returns 204 on success.
+:rtype: Response
+
+[DELETE] server_unban(ban_id)
+Revoke an existing ban.
+
+:param ban_id: The ban id of an existing ban
+:type ban_id: str
+:return: Returns 204 on success.
+:rtype: Response
 ```
 
 ## Users
 
-```python
-[GET] cftools_api_server_lookup(identifier)
+```
+[GET] server_lookup_user(identifier)
+Search CFTools Cloud database for a user.
+
+:param identifier: Either a Steam64, BattlEye GUID or Bohemia Interactive UID
+:type identifier: str
+:return: Json response with information about user.
+:rtype: Response
+
 ```
 
 ### If u needed to close session
 
-```python
+```
 cfapi.close()
+Method to close a session.
 ```
 
 

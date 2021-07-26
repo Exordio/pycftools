@@ -38,47 +38,47 @@ class CfToolsApi(object):
         self.__pycftools_debug = pycftools_debug
         self.__application_id = app_id
         self.__application_secret = app_secret
-        self.__api_cftools_server_id_hash = self._create_server_id_hash(game_identifier, ip, game_port)
-        self.__api_cftools_server_api_id = server_api_id
+        self.__server_id_hash = self._create_server_id_hash(game_identifier, ip, game_port)
+        self.__server_api_id = server_api_id
 
         # General public api url
-        self.__api_cftools_public_api_url = 'https://data.cftools.cloud'
+        self.__public_api_url = 'https://data.cftools.cloud'
 
         # ---------------- Api urls ----------------
 
-        self.__api_cftools_authentication_url = ''.join([self.__api_cftools_public_api_url, '/v1/auth/register'])
-        self.__api_cftools_get_grants_url = ''.join([self.__api_cftools_public_api_url, '/v1/@app/grants'])
-        self.__api_cftools_api_get_server_details_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/gameserver/{self.__api_cftools_server_id_hash}'])
-        self.__api_cftools_get_server_info_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/info'])
-        self.__api_cftools_get_server_statistics_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/statistics'])
-        self.__api_cftools_get_server_player_list_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/GSM/list'])
-        self.__api_cftools_post_server_kick_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/kick'])
-        self.__api_cftools_post_server_private_message_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/message-private'])
-        self.__api_cftools_post_server_public_message_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/message-server'])
-        self.__api_cftools_post_server_row_rcon_command_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/raw'])
-        self.__api_cftools_post_server_teleport_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v0/server/{self.__api_cftools_server_api_id}/gameLabs/teleport'])
-        self.__api_cftools_post_server_spawn_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v0/server/{self.__api_cftools_server_api_id}/gameLabs/spawn'])
-        self.__api_cftools_server_queue_priority_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/queuepriority'])
-        self.__api_cftools_server_whitelist_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/whitelist'])
-        self.__api_cftools_server_leaderboard_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/leaderboard'])
-        self.__api_cftools_server_player_stats_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/server/{self.__api_cftools_server_api_id}/player'])
-        self.__api_cftools_server_banlist_url = ''.join(
-            [self.__api_cftools_public_api_url, f'/v1/banlist/{server_banlist_id}/bans'])
-        self.__api_cftools_server_lookup_url = ''.join([self.__api_cftools_public_api_url, '/v1/users/lookup'])
+        self.__authentication_url = ''.join([self.__public_api_url, '/v1/auth/register'])
+        self.__grants_url = ''.join([self.__public_api_url, '/v1/@app/grants'])
+        self.__server_details_url = ''.join(
+            [self.__public_api_url, f'/v1/gameserver/{self.__server_id_hash}'])
+        self.__server_info_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/info'])
+        self.__server_statistics_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/statistics'])
+        self.__server_player_list_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/GSM/list'])
+        self.__server_kick_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/kick'])
+        self.__server_private_message_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/message-private'])
+        self.__server_public_message_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/message-server'])
+        self.__server_row_rcon_command_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/raw'])
+        self.__server_teleport_url = ''.join(
+            [self.__public_api_url, f'/v0/server/{self.__server_api_id}/gameLabs/teleport'])
+        self.__server_spawn_url = ''.join(
+            [self.__public_api_url, f'/v0/server/{self.__server_api_id}/gameLabs/spawn'])
+        self.__server_queue_priority_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/queuepriority'])
+        self.__server_whitelist_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/whitelist'])
+        self.__server_leaderboard_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/leaderboard'])
+        self.__server_player_stats_url = ''.join(
+            [self.__public_api_url, f'/v1/server/{self.__server_api_id}/player'])
+        self.__server_banlist_url = ''.join(
+            [self.__public_api_url, f'/v1/banlist/{server_banlist_id}/bans'])
+        self.__server_lookup_url = ''.join([self.__public_api_url, '/v1/users/lookup'])
 
         # ---------------- Api urls End ----------------
 
@@ -91,7 +91,7 @@ class CfToolsApi(object):
 
     # ---------------- Save/load tokens ----------------
 
-    def cftools_api_check_register(self):
+    def check_register(self):
         """
         This method is needed to check if we have an up-to-date authorization token.
         It checks if there is a file with a token inside.
@@ -114,10 +114,10 @@ class CfToolsApi(object):
         try:
             if os.path.exists(self.__cftools_token_file):
                 print('Token file found') if self.__pycftools_debug else None
-                self.__cftools_load_auth_bearer_token()
+                self.__load_auth_bearer_token()
             else:
                 print('File with token not finded, creating new.') if self.__pycftools_debug else None
-                self.__cftools_save_auth_bearer_token(self.__cftools_api_get_auth_bearer_token())
+                self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
 
             print('Token loaded') if self.__pycftools_debug else None
@@ -126,7 +126,7 @@ class CfToolsApi(object):
             print(err)
             return False
 
-    def __cftools_save_auth_bearer_token(self, token):
+    def __save_auth_bearer_token(self, token):
         """
         Method to save token to file.
 
@@ -140,7 +140,7 @@ class CfToolsApi(object):
             }
             pickle.dump(to_save_data, conf_file)
 
-    def __cftools_check_token_timestamp(self, timestamp):
+    def __check_token_timestamp(self, timestamp):
         """
         :param timestamp: Unix timestamp from file. It shows the creation date of the token.
         :type timestamp: float
@@ -154,23 +154,23 @@ class CfToolsApi(object):
             print('Auth token is not outdated') if self.__pycftools_debug else None
             return False
 
-    def __cftools_load_auth_bearer_token(self):
+    def __load_auth_bearer_token(self):
         """
         Method to load dict with token from file.
         """
         with open(self.__cftools_token_file, 'rb') as conf_file:
             try:
                 to_load_data = pickle.load(conf_file)
-                if self.__cftools_check_token_timestamp(to_load_data['timestamp']):
-                    self.__cftools_save_auth_bearer_token(self.__cftools_api_get_auth_bearer_token())
+                if self.__check_token_timestamp(to_load_data['timestamp']):
+                    self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                     self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
                 else:
                     self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
             except EOFError:
-                self.__cftools_save_auth_bearer_token(self.__cftools_api_get_auth_bearer_token())
+                self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
 
-    def __cftools_api_get_auth_bearer_token(self):
+    def __get_auth_bearer_token(self):
         """
         Some routes require authentication in the form of Bearer tokens in the request headers.
 
@@ -186,7 +186,7 @@ class CfToolsApi(object):
             # Your application secret.
             'secret': self.__application_secret
         }
-        reg_data = self.__api_cftools_session.post(self.__api_cftools_authentication_url, data=payload)
+        reg_data = self.__api_cftools_session.post(self.__authentication_url, data=payload)
         if reg_data.status_code == 200:
             self.__api_cftools_bearer_token = reg_data.json()['token']
             print('Auth token received.') if self.__pycftools_debug else None
@@ -203,7 +203,7 @@ class CfToolsApi(object):
     # This permission can be granted by sending the resource owner the "Grant URL"
     # You can find on your application dashboard.
 
-    def cftools_api_get_grants(self):
+    def grants(self):
         """
         Get list of all grants and their respective id's.
 
@@ -213,53 +213,53 @@ class CfToolsApi(object):
         :return: List of all grants and their respective id's.
         :rtype: Response
         """
-        return self.__api_cftools_session.get(self.__api_cftools_get_grants_url, headers=self.__api_cftools_headers)
+        return self.__api_cftools_session.get(self.__grants_url, headers=self.__api_cftools_headers)
 
-    def cftools_api_get_server_details(self):
+    def server_details(self):
         """
         Get server details by Server Id. Server id server id is specified in the class constructor.
 
         :return: Server details by Server Id.
         :rtype: Response
         """
-        return self.__api_cftools_session.get(self.__api_cftools_api_get_server_details_url,
+        return self.__api_cftools_session.get(self.__server_details_url,
                                               headers=self.__api_cftools_headers)
 
     # ---------------- Server ----------------
 
     # All subsequent routes require a Server API Id and an active application grant.
 
-    def cftools_api_get_server_info(self):
+    def server_info(self):
         """
         Get general information about the registered server.
 
         :return: Information about the registered server
         :rtype: Response
         """
-        return self.__api_cftools_session.get(self.__api_cftools_get_server_info_url,
+        return self.__api_cftools_session.get(self.__server_info_url,
                                               headers=self.__api_cftools_headers)
 
-    def cftools_api_get_server_statistics(self):
+    def server_statistics(self):
         """
         Get server statistics.
 
         :return: Server statistics.
         :rtype: Response
         """
-        return self.__api_cftools_session.get(self.__api_cftools_get_server_statistics_url,
+        return self.__api_cftools_session.get(self.__server_statistics_url,
                                               headers=self.__api_cftools_headers)
 
-    def cftools_api_get_server_list(self):
+    def server_player_list(self):
         """
         Get full player list.
 
         :return: Full player list.
         :rtype: Response
         """
-        return self.__api_cftools_session.get(self.__api_cftools_get_server_player_list_url,
+        return self.__api_cftools_session.get(self.__server_player_list_url,
                                               headers=self.__api_cftools_headers)
 
-    def cftools_api_server_kick(self, gs_id, resaon):
+    def server_kick(self, gs_id, resaon):
         """
         Kick a player.
 
@@ -274,10 +274,10 @@ class CfToolsApi(object):
             'gamesession_id': gs_id,
             'reason': resaon
         }
-        return self.__api_cftools_session.post(self.__api_cftools_post_server_kick_url, data=payload,
+        return self.__api_cftools_session.post(self.__server_kick_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
-    def cftools_api_server_private_message(self, gs_id, content):
+    def server_private_message(self, gs_id, content):
         """
         Send a private message to a player.
 
@@ -292,10 +292,10 @@ class CfToolsApi(object):
             'gamesession_id': gs_id,
             'content': content
         }
-        return self.__api_cftools_session.post(self.__api_cftools_post_server_private_message_url,
+        return self.__api_cftools_session.post(self.__server_private_message_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
-    def cftools_api_server_public_message(self, content):
+    def server_public_message(self, content):
         """
         Send a public message to the server.
 
@@ -305,10 +305,10 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'content': content}
-        return self.__api_cftools_session.post(self.__api_cftools_post_server_public_message_url,
+        return self.__api_cftools_session.post(self.__server_public_message_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
-    def cftools_api_server_row_rcon_command(self, command):
+    def server_row_rcon_command(self, command):
         """
         Send a raw RCon command to the server.
 
@@ -318,10 +318,10 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'command': command}
-        return self.__api_cftools_session.post(self.__api_cftools_post_server_row_rcon_command_url,
+        return self.__api_cftools_session.post(self.__server_row_rcon_command_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
-    def cftools_api_server_teleport(self, gs_id, coords):
+    def server_teleport(self, gs_id, coords):
         """
         Teleport a player GameLabs required Not all games supported.
 
@@ -336,10 +336,10 @@ class CfToolsApi(object):
             'gamesession_id': gs_id,
             'coords': coords
         }
-        return self.__api_cftools_session.post(self.__api_cftools_post_server_teleport_url,
+        return self.__api_cftools_session.post(self.__server_teleport_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
-    def cftools_api_server_spawn(self, gs_id, obj_name, quantity):
+    def server_spawn(self, gs_id, obj_name, quantity):
         """
         Spawn an object for player GameLabs required Not all games supported.
 
@@ -357,10 +357,10 @@ class CfToolsApi(object):
             'object': obj_name,
             'quantity': quantity
         }
-        return self.__api_cftools_session.post(self.__api_cftools_post_server_spawn_url, data=payload,
+        return self.__api_cftools_session.post(self.__server_spawn_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
-    def cftools_api_server_queue_priority_list(self, cftools_id, comment):
+    def server_queue_priority_list(self, cftools_id, comment):
         """
         Get a list of all queue priority entries Streamed response.
 
@@ -375,11 +375,11 @@ class CfToolsApi(object):
             'cftools_id': cftools_id,
             'comment': comment
         }
-        return self.__api_cftools_session.get(self.__api_cftools_server_queue_priority_url,
+        return self.__api_cftools_session.get(self.__server_queue_priority_url,
                                               params=payload,
                                               headers=self.__api_cftools_headers)
 
-    def cftools_api_server_queue_priority_entry(self, cftools_id, expires_at, comment):
+    def server_queue_priority_entry(self, cftools_id, expires_at, comment):
         """
         Create a new queue priority entry.
 
@@ -397,11 +397,11 @@ class CfToolsApi(object):
             'expires_at': expires_at,
             'comment': comment
         }
-        return self.__api_cftools_session.post(self.__api_cftools_server_queue_priority_url,
+        return self.__api_cftools_session.post(self.__server_queue_priority_url,
                                                data=payload,
                                                headers=self.__api_cftools_headers)
 
-    def cftools_api_server_queue_priority_delete_entry(self, cftools_id):
+    def queue_priority_delete_entry(self, cftools_id):
         """
         Delete an existing queue priority entry.
 
@@ -411,11 +411,11 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'cftools_id': cftools_id}
-        return self.__api_cftools_session.delete(self.__api_cftools_server_queue_priority_url,
+        return self.__api_cftools_session.delete(self.__server_queue_priority_url,
                                                  data=payload,
                                                  headers=self.__api_cftools_headers)
 
-    def cftools_api_server_whitelist(self, cftools_id, comment):
+    def server_whitelist(self, cftools_id, comment):
         """
         Get a list of all whitelist entries Streamed response.
 
@@ -430,11 +430,11 @@ class CfToolsApi(object):
             'cftools_id': cftools_id,
             'comment': comment
         }
-        return self.__api_cftools_session.get(self.__api_cftools_server_whitelist_url,
+        return self.__api_cftools_session.get(self.__server_whitelist_url,
                                               params=payload,
                                               headers=self.__api_cftools_headers)
 
-    def cftools_api_server_whitelist_entry(self, cftools_id, expires_at, comment):
+    def server_whitelist_entry(self, cftools_id, expires_at, comment):
         """
         Create a new whitelist entry.
 
@@ -452,10 +452,10 @@ class CfToolsApi(object):
             'expires_at': expires_at,
             'comment': comment
         }
-        return self.__api_cftools_session.post(self.__api_cftools_server_whitelist_url, data=payload,
+        return self.__api_cftools_session.post(self.__server_whitelist_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
-    def cftools_api_server_whitelist_delete_entry(self, cftools_id):
+    def server_whitelist_delete_entry(self, cftools_id):
         """
         Delete an existing whitelist entry.
 
@@ -465,11 +465,11 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'cftools_id': cftools_id}
-        return self.__api_cftools_session.delete(self.__api_cftools_server_whitelist_url,
+        return self.__api_cftools_session.delete(self.__server_whitelist_url,
                                                  data=payload,
                                                  headers=self.__api_cftools_headers)
 
-    def cftools_api_server_leaderboard(self, stat, order, limit):
+    def server_leaderboard(self, stat, order, limit):
         """
         Request the generation of a leaderboard based on internally kept player stats.
         This may fail if no stats are present.
@@ -491,10 +491,10 @@ class CfToolsApi(object):
             'order': order,
             'limit': limit
         }
-        return self.__api_cftools_session.get(self.__api_cftools_server_leaderboard_url, params=payload,
+        return self.__api_cftools_session.get(self.__server_leaderboard_url, params=payload,
                                               headers=self.__api_cftools_headers)
 
-    def cftools_api_server_player_stats(self, cftools_id):
+    def server_player_stats(self, cftools_id):
         """
         Individual stats of a player for a server.
 
@@ -507,14 +507,14 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'cftools_id': cftools_id}
-        return self.__api_cftools_session.get(self.__api_cftools_server_player_stats_url, params=payload,
+        return self.__api_cftools_session.get(self.__server_player_stats_url, params=payload,
                                               headers=self.__api_cftools_headers)
 
     # ---------------- Banlist ----------------
 
     # All subsequent routes require a Banlist Id and an active application grant.
 
-    def cftools_api_server_banlist(self, flt):
+    def server_banlist(self, flt):
         """
         Get a list of all bans. Streamed response.
 
@@ -524,10 +524,10 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'filter': flt}
-        return self.__api_cftools_session.get(self.__api_cftools_server_banlist_url, params=payload,
+        return self.__api_cftools_session.get(self.__server_banlist_url, params=payload,
                                               headers=self.__api_cftools_headers)
 
-    def cftools_api_server_ban(self, frmt, identifier, expires_at, reason):
+    def server_ban(self, frmt, identifier, expires_at, reason):
         """
         Issue a new ban. Triggers an in-game kick.
 
@@ -548,10 +548,10 @@ class CfToolsApi(object):
             'expires_at': expires_at,
             'reason': reason
         }
-        return self.__api_cftools_session.post(self.__api_cftools_server_banlist_url, data=payload,
+        return self.__api_cftools_session.post(self.__server_banlist_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
-    def cftools_api_server_unban(self, ban_id):
+    def server_unban(self, ban_id):
         """
         Revoke an existing ban.
 
@@ -561,12 +561,12 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'ban_id': ban_id}
-        return self.__api_cftools_session.delete(self.__api_cftools_server_banlist_url, data=payload,
+        return self.__api_cftools_session.delete(self.__server_banlist_url, data=payload,
                                                  headers=self.__api_cftools_headers)
 
     # ---------------- Users ----------------
 
-    def cftools_api_server_lookup(self, identifier):
+    def server_lookup_user(self, identifier):
         """
         Search CFTools Cloud database for a user.
 
@@ -576,7 +576,7 @@ class CfToolsApi(object):
         :rtype: Response
         """
         payload = {'identifier': identifier}
-        return self.__api_cftools_session.get(self.__api_cftools_server_lookup_url, params=payload,
+        return self.__api_cftools_session.get(self.__server_lookup_url, params=payload,
                                               headers=self.__api_cftools_headers)
 
     # ---------------- Server id ----------------
