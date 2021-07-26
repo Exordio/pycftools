@@ -127,7 +127,7 @@ Note:
 
 ## Game-Server
 
-```
+```python
 # The library itself creates the serverID (sha1 -> hexdigest) from the game id, ipv4, gameport
 
 [GET] server_details()
