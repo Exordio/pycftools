@@ -1,3 +1,5 @@
+from functools import wraps
+
 import datetime
 import requests
 import hashlib
@@ -89,12 +91,9 @@ class CfToolsApi(object):
         self.__cftools_token_file = auth_token_filename
         self.__timestamp_delta = timestamp_delta
 
-        # issue #1
-        self.check_register()
-
     # ---------------- Save/load tokens ----------------
 
-    def check_register(self, *args, **kwargs):
+    def check_register(wmethod):
         """
         This method is needed to check if we have an up-to-date authorization token.
         It checks if there is a file with a token inside.
@@ -113,21 +112,24 @@ class CfToolsApi(object):
         :return: return True if all auth moments is OK. else False.
         :rtype: bool
         """
-        print('Cf tools auth...') if self.__pycftools_debug else None
-        try:
-            if os.path.exists(self.__cftools_token_file):
-                print('Token file found') if self.__pycftools_debug else None
-                self.__load_auth_bearer_token()
-            else:
-                print('File with token not finded, creating new.') if self.__pycftools_debug else None
-                self.__save_auth_bearer_token(self.__get_auth_bearer_token())
-                self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+        @wraps(wmethod)
+        def wrapper(*args, **kwargs):
+            this = args[0]
+            print('Cf tools auth...') if this.__pycftools_debug else None
+            try:
+                if os.path.exists(this.__cftools_token_file):
+                    print('Token file found') if this.__pycftools_debug else None
+                    this.__load_auth_bearer_token()
+                else:
+                    print('File with token not finded, creating new.') if this.__pycftools_debug else None
+                    this.__save_auth_bearer_token(this.__get_auth_bearer_token())
+                    this.__api_cftools_headers['Authorization'] = f'Bearer {this.__api_cftools_bearer_token}'
 
-            print('Token loaded') if self.__pycftools_debug else None
-            return True
-        except Exception as err:
-            print(err)
-            return False
+                print('Token loaded') if this.__pycftools_debug else None
+                return wmethod(*args, **kwargs)
+            except Exception as err:
+                print(err)
+        return wrapper
 
     def __save_auth_bearer_token(self, token):
         """
