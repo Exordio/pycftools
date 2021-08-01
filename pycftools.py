@@ -109,6 +109,10 @@ class CfToolsApi(object):
             every time after the object is re-created.
             Moreover, there is a delay of 2 requests per minute.
 
+            this. - in this context is self.
+            I use this method as a wrapper for other methods where the authorization token must be up to date.
+
+
         :return: return True if all auth moments is OK. else False.
         :rtype: bool
         """
