@@ -76,13 +76,15 @@ cfapi = pycftools.CfToolsApi(--->... < ---)
 
 ## Auth
 
+##After version 0.2.7, you no longer need to call this method yourself. 
+##The library will do everything by itself when you call the method you need.
+
 ```python
 check_register()
 
 This method is needed to check if we have an up-to-date authorization token.
 It checks if there is a file with a token inside.
 If such is found, it checks the relevance of the token and loads if everything is correct.
-Else asks for a new one, and automatically sets / saves.
 
 Note:
     Saving a token to a file is the simplest thing that came to my mind.
