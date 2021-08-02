@@ -123,7 +123,7 @@ class CfToolsApi(object):
         @wraps(wmethod)
         def wrapper(*args, **kwargs):
             self = args[0]
-            print('Cf tools auth...') if self.__pycftools_debug else None
+            print(f'|| {datetime.datetime.now()} || Cf tools auth...') if self.__pycftools_debug else None
             try:
                 if self.__first_load:
                     if os.path.exists(self.__cftools_token_file):
