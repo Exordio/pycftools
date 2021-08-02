@@ -1,3 +1,5 @@
+from functools import wraps
+
 import datetime
 import requests
 import hashlib
@@ -89,9 +91,12 @@ class CfToolsApi(object):
         self.__cftools_token_file = auth_token_filename
         self.__timestamp_delta = timestamp_delta
 
+        self.__token_timestamp = None
+        self.__first_load = True
+
     # ---------------- Save/load tokens ----------------
 
-    def check_register(self):
+    def check_register(wmethod):
         """
         This method is needed to check if we have an up-to-date authorization token.
         It checks if there is a file with a token inside.
@@ -107,24 +112,42 @@ class CfToolsApi(object):
             every time after the object is re-created.
             Moreover, there is a delay of 2 requests per minute.
 
+            this. - in this context is self.
+            I use this method as a wrapper for other methods where the authorization token must be up to date.
+
+
         :return: return True if all auth moments is OK. else False.
         :rtype: bool
         """
-        print('Cf tools auth...') if self.__pycftools_debug else None
-        try:
-            if os.path.exists(self.__cftools_token_file):
-                print('Token file found') if self.__pycftools_debug else None
-                self.__load_auth_bearer_token()
-            else:
-                print('File with token not finded, creating new.') if self.__pycftools_debug else None
-                self.__save_auth_bearer_token(self.__get_auth_bearer_token())
-                self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
 
-            print('Token loaded') if self.__pycftools_debug else None
-            return True
-        except Exception as err:
-            print(err)
-            return False
+        @wraps(wmethod)
+        def wrapper(*args, **kwargs):
+            self = args[0]
+            print('Cf tools auth...') if self.__pycftools_debug else None
+            try:
+                if self.__first_load:
+                    if os.path.exists(self.__cftools_token_file):
+                        print('Token file found') if self.__pycftools_debug else None
+                        self.__load_auth_bearer_token()
+                    else:
+                        print('File with token not finded, creating new.') if self.__pycftools_debug else None
+                        self.__save_auth_bearer_token(self.__get_auth_bearer_token())
+                        self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                        self.__token_timestamp = datetime.datetime.now().timestamp()
+                    self.__first_load = False
+                else:
+                    print('Load token from mem') if self.__pycftools_debug else None
+                    if self.__check_token_timestamp(self.__token_timestamp):
+                        self.__save_auth_bearer_token(self.__get_auth_bearer_token())
+                        self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                        self.__token_timestamp = datetime.datetime.now().timestamp()
+
+                print('Token loaded') if self.__pycftools_debug else None
+                return wmethod(*args, **kwargs)
+            except Exception as err:
+                print(err)
+
+        return wrapper
 
     def __save_auth_bearer_token(self, token):
         """
@@ -164,11 +187,14 @@ class CfToolsApi(object):
                 if self.__check_token_timestamp(to_load_data['timestamp']):
                     self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                     self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                    self.__token_timestamp = datetime.datetime.now().timestamp()
                 else:
                     self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
+                    self.__token_timestamp = to_load_data['timestamp']
             except EOFError:
                 self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                self.__token_timestamp = datetime.datetime.now().timestamp()
 
     def __get_auth_bearer_token(self):
         """
@@ -203,6 +229,7 @@ class CfToolsApi(object):
     # This permission can be granted by sending the resource owner the "Grant URL"
     # You can find on your application dashboard.
 
+    @check_register
     def grants(self):
         """
         Get list of all grants and their respective id's.
@@ -215,6 +242,7 @@ class CfToolsApi(object):
         """
         return self.__api_cftools_session.get(self.__grants_url, headers=self.__api_cftools_headers)
 
+    @check_register
     def server_details(self):
         """
         Get server details by Server Id. Server id server id is specified in the class constructor.
@@ -229,6 +257,7 @@ class CfToolsApi(object):
 
     # All subsequent routes require a Server API Id and an active application grant.
 
+    @check_register
     def server_info(self):
         """
         Get general information about the registered server.
@@ -239,6 +268,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.get(self.__server_info_url,
                                               headers=self.__api_cftools_headers)
 
+    @check_register
     def server_statistics(self):
         """
         Get server statistics.
@@ -249,6 +279,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.get(self.__server_statistics_url,
                                               headers=self.__api_cftools_headers)
 
+    @check_register
     def server_player_list(self):
         """
         Get full player list.
@@ -259,6 +290,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.get(self.__server_player_list_url,
                                               headers=self.__api_cftools_headers)
 
+    @check_register
     def server_kick(self, gs_id, resaon):
         """
         Kick a player.
@@ -277,6 +309,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_kick_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
+    @check_register
     def server_private_message(self, gs_id, content):
         """
         Send a private message to a player.
@@ -295,6 +328,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_private_message_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
+    @check_register
     def server_public_message(self, content):
         """
         Send a public message to the server.
@@ -308,6 +342,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_public_message_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
+    @check_register
     def server_row_rcon_command(self, command):
         """
         Send a raw RCon command to the server.
@@ -321,6 +356,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_row_rcon_command_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
+    @check_register
     def server_teleport(self, gs_id, coords):
         """
         Teleport a player GameLabs required Not all games supported.
@@ -339,6 +375,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_teleport_url,
                                                data=payload, headers=self.__api_cftools_headers)
 
+    @check_register
     def server_spawn(self, gs_id, obj_name, quantity):
         """
         Spawn an object for player GameLabs required Not all games supported.
@@ -360,6 +397,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_spawn_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
+    @check_register
     def server_queue_priority_list(self, cftools_id, comment):
         """
         Get a list of all queue priority entries Streamed response.
@@ -379,6 +417,7 @@ class CfToolsApi(object):
                                               params=payload,
                                               headers=self.__api_cftools_headers)
 
+    @check_register
     def server_queue_priority_entry(self, cftools_id, expires_at, comment):
         """
         Create a new queue priority entry.
@@ -401,6 +440,7 @@ class CfToolsApi(object):
                                                data=payload,
                                                headers=self.__api_cftools_headers)
 
+    @check_register
     def queue_priority_delete_entry(self, cftools_id):
         """
         Delete an existing queue priority entry.
@@ -415,6 +455,7 @@ class CfToolsApi(object):
                                                  data=payload,
                                                  headers=self.__api_cftools_headers)
 
+    @check_register
     def server_whitelist(self, cftools_id, comment):
         """
         Get a list of all whitelist entries Streamed response.
@@ -434,6 +475,7 @@ class CfToolsApi(object):
                                               params=payload,
                                               headers=self.__api_cftools_headers)
 
+    @check_register
     def server_whitelist_entry(self, cftools_id, expires_at, comment):
         """
         Create a new whitelist entry.
@@ -455,6 +497,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_whitelist_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
+    @check_register
     def server_whitelist_delete_entry(self, cftools_id):
         """
         Delete an existing whitelist entry.
@@ -469,6 +512,7 @@ class CfToolsApi(object):
                                                  data=payload,
                                                  headers=self.__api_cftools_headers)
 
+    @check_register
     def server_leaderboard(self, stat, order, limit):
         """
         Request the generation of a leaderboard based on internally kept player stats.
@@ -494,6 +538,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.get(self.__server_leaderboard_url, params=payload,
                                               headers=self.__api_cftools_headers)
 
+    @check_register
     def server_player_stats(self, cftools_id):
         """
         Individual stats of a player for a server.
@@ -514,6 +559,7 @@ class CfToolsApi(object):
 
     # All subsequent routes require a Banlist Id and an active application grant.
 
+    @check_register
     def server_banlist(self, flt):
         """
         Get a list of all bans. Streamed response.
@@ -527,6 +573,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.get(self.__server_banlist_url, params=payload,
                                               headers=self.__api_cftools_headers)
 
+    @check_register
     def server_ban(self, frmt, identifier, expires_at, reason):
         """
         Issue a new ban. Triggers an in-game kick.
@@ -551,6 +598,7 @@ class CfToolsApi(object):
         return self.__api_cftools_session.post(self.__server_banlist_url, data=payload,
                                                headers=self.__api_cftools_headers)
 
+    @check_register
     def server_unban(self, ban_id):
         """
         Revoke an existing ban.
@@ -566,6 +614,7 @@ class CfToolsApi(object):
 
     # ---------------- Users ----------------
 
+    @check_register
     def server_lookup_user(self, identifier):
         """
         Search CFTools Cloud database for a user.

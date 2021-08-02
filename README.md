@@ -24,17 +24,6 @@ cfapi = pycftools.CfToolsApi(app_id='',
                              ip='', game_port='',
                              server_id='',
                              server_banlist_id='')
-
-# Before working with methods, you need to get a token
-# The library itself will add the token to the session headers
-# All you need to do is create an instance of the class with all the parameters.
-# And run the registration method.
-if cfapi.check_register():
-    print('OK')
-    cfapi.grants()
-else:
-    print('Something not OK')
-
 ```
 
 ## Constructor arguments
@@ -83,12 +72,13 @@ cfapi = pycftools.CfToolsApi(--->... < ---)
 # Before working with methods, you need to get a token
 # The library itself will add the token to the session headers
 # All you need to do is create an instance of the class with all the parameters.
-# And run the registration method.
-cfapi.check_register()
-# After receiving the token, you get access to all methods
 ```
 
 ## Auth
+
+### After version 0.2.7, you no longer need to call this method yourself. 
+
+### The library will do everything by itself when you call the method you need.
 
 ```python
 check_register()
@@ -96,7 +86,6 @@ check_register()
 This method is needed to check if we have an up-to-date authorization token.
 It checks if there is a file with a token inside.
 If such is found, it checks the relevance of the token and loads if everything is correct.
-Else asks for a new one, and automatically sets / saves.
 
 Note:
     Saving a token to a file is the simplest thing that came to my mind.
