@@ -127,22 +127,23 @@ class CfToolsApi(object):
             try:
                 if self.__first_load:
                     if os.path.exists(self.__cftools_token_file):
-                        print('Token file found') if self.__pycftools_debug else None
+                        print(f'|| {datetime.datetime.now()} || Token file found') if self.__pycftools_debug else None
                         self.__load_auth_bearer_token()
                     else:
-                        print('File with token not finded, creating new.') if self.__pycftools_debug else None
+                        print(
+                            f'|| {datetime.datetime.now()} || File with token not finded, creating new.') if self.__pycftools_debug else None
                         self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                         self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
                         self.__token_timestamp = datetime.datetime.now().timestamp()
                     self.__first_load = False
                 else:
-                    print('Load token from mem') if self.__pycftools_debug else None
+                    print(f'|| {datetime.datetime.now()} || Load token from mem') if self.__pycftools_debug else None
                     if self.__check_token_timestamp(self.__token_timestamp):
                         self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                         self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
                         self.__token_timestamp = datetime.datetime.now().timestamp()
 
-                print('Token loaded') if self.__pycftools_debug else None
+                print(f'|| {datetime.datetime.now()} || Token loaded') if self.__pycftools_debug else None
                 return wmethod(*args, **kwargs)
             except Exception as err:
                 print(err)
@@ -171,10 +172,10 @@ class CfToolsApi(object):
         :rtype: bool
         """
         if (timestamp + self.__timestamp_delta) <= datetime.datetime.now().timestamp():
-            print('Auth token is outdated, need to get a new one') if self.__pycftools_debug else None
+            print(f'|| {datetime.datetime.now()} || Auth token is outdated') if self.__pycftools_debug else None
             return True
         else:
-            print('Auth token is not outdated') if self.__pycftools_debug else None
+            print(f'|| {datetime.datetime.now()} || Auth token is not outdated') if self.__pycftools_debug else None
             return False
 
     def __load_auth_bearer_token(self):
@@ -215,10 +216,10 @@ class CfToolsApi(object):
         reg_data = self.__api_cftools_session.post(self.__authentication_url, data=payload)
         if reg_data.status_code == 200:
             self.__api_cftools_bearer_token = reg_data.json()['token']
-            print('Auth token received.') if self.__pycftools_debug else None
+            print(f'|| {datetime.datetime.now()} || Auth token received.') if self.__pycftools_debug else None
             return self.__api_cftools_bearer_token
         else:
-            print(f'Auth error reg_data status code : {reg_data.status_code}')
+            print(f'|| {datetime.datetime.now()} || Auth error reg_data status code : {reg_data.status_code}')
             assert False
 
     # ---------------- Save/load tokens End ----------------
