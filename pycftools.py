@@ -91,6 +91,9 @@ class CfToolsApi(object):
         self.__cftools_token_file = auth_token_filename
         self.__timestamp_delta = timestamp_delta
 
+        self.__token_timestamp = None
+        self.__first_load = True
+
     # ---------------- Save/load tokens ----------------
 
     def check_register(wmethod):
@@ -116,23 +119,34 @@ class CfToolsApi(object):
         :return: return True if all auth moments is OK. else False.
         :rtype: bool
         """
+
         @wraps(wmethod)
         def wrapper(*args, **kwargs):
-            this = args[0]
-            print('Cf tools auth...') if this.__pycftools_debug else None
+            self = args[0]
+            print('Cf tools auth...') if self.__pycftools_debug else None
             try:
-                if os.path.exists(this.__cftools_token_file):
-                    print('Token file found') if this.__pycftools_debug else None
-                    this.__load_auth_bearer_token()
+                if self.__first_load:
+                    if os.path.exists(self.__cftools_token_file):
+                        print('Token file found') if self.__pycftools_debug else None
+                        self.__load_auth_bearer_token()
+                    else:
+                        print('File with token not finded, creating new.') if self.__pycftools_debug else None
+                        self.__save_auth_bearer_token(self.__get_auth_bearer_token())
+                        self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                        self.__token_timestamp = datetime.datetime.now().timestamp()
+                    self.__first_load = False
                 else:
-                    print('File with token not finded, creating new.') if this.__pycftools_debug else None
-                    this.__save_auth_bearer_token(this.__get_auth_bearer_token())
-                    this.__api_cftools_headers['Authorization'] = f'Bearer {this.__api_cftools_bearer_token}'
+                    print('Load token from mem') if self.__pycftools_debug else None
+                    if self.__check_token_timestamp(self.__token_timestamp):
+                        self.__save_auth_bearer_token(self.__get_auth_bearer_token())
+                        self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                        self.__token_timestamp = datetime.datetime.now().timestamp()
 
-                print('Token loaded') if this.__pycftools_debug else None
+                print('Token loaded') if self.__pycftools_debug else None
                 return wmethod(*args, **kwargs)
             except Exception as err:
                 print(err)
+
         return wrapper
 
     def __save_auth_bearer_token(self, token):
@@ -173,11 +187,14 @@ class CfToolsApi(object):
                 if self.__check_token_timestamp(to_load_data['timestamp']):
                     self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                     self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                    self.__token_timestamp = datetime.datetime.now().timestamp()
                 else:
                     self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
+                    self.__token_timestamp = to_load_data['timestamp']
             except EOFError:
                 self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
+                self.__token_timestamp = datetime.datetime.now().timestamp()
 
     def __get_auth_bearer_token(self):
         """
