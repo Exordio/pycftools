@@ -24,17 +24,6 @@ cfapi = pycftools.CfToolsApi(app_id='',
                              ip='', game_port='',
                              server_id='',
                              server_banlist_id='')
-
-# Before working with methods, you need to get a token
-# The library itself will add the token to the session headers
-# All you need to do is create an instance of the class with all the parameters.
-# And run the registration method.
-if cfapi.check_register():
-    print('OK')
-    cfapi.grants()
-else:
-    print('Something not OK')
-
 ```
 
 ## Constructor arguments
@@ -83,9 +72,6 @@ cfapi = pycftools.CfToolsApi(--->... < ---)
 # Before working with methods, you need to get a token
 # The library itself will add the token to the session headers
 # All you need to do is create an instance of the class with all the parameters.
-# And run the registration method.
-cfapi.check_register()
-# After receiving the token, you get access to all methods
 ```
 
 ## Auth
