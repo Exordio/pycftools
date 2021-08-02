@@ -76,8 +76,9 @@ cfapi = pycftools.CfToolsApi(--->... < ---)
 
 ## Auth
 
-##After version 0.2.7, you no longer need to call this method yourself. 
-##The library will do everything by itself when you call the method you need.
+### After version 0.2.7, you no longer need to call this method yourself. 
+
+### The library will do everything by itself when you call the method you need.
 
 ```python
 check_register()
