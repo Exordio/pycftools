@@ -291,20 +291,20 @@ class CfToolsApi(object):
                                               headers=self.__api_cftools_headers)
 
     @check_register
-    def server_kick(self, gs_id, resaon):
+    def server_kick(self, gs_id, reason):
         """
         Kick a player.
 
         :param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
         :type gs_id: str
-        :param resaon: Reason 1-128 len max.
-        :type resaon: str
+        :param reason: Reason 1-128 len max.
+        :type reason: str
         :return: Returns 204 on success.
         :rtype: Response
         """
         payload = {
             'gamesession_id': gs_id,
-            'reason': resaon
+            'reason': reason
         }
         return self.__api_cftools_session.post(self.__server_kick_url, data=payload,
                                                headers=self.__api_cftools_headers)
