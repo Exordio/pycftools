@@ -192,6 +192,9 @@ class CfToolsApi(object):
                 else:
                     self.__api_cftools_headers['Authorization'] = f'''Bearer {to_load_data['token']}'''
                     self.__token_timestamp = to_load_data['timestamp']
+
+                print(
+                    f'|| {datetime.datetime.now()} || Setting api headers {self.__api_cftools_headers}') if self.__pycftools_debug else None
             except EOFError:
                 self.__save_auth_bearer_token(self.__get_auth_bearer_token())
                 self.__api_cftools_headers['Authorization'] = f'Bearer {self.__api_cftools_bearer_token}'
@@ -216,7 +219,7 @@ class CfToolsApi(object):
         reg_data = self.__api_cftools_session.post(self.__authentication_url, data=payload)
         if reg_data.status_code == 200:
             self.__api_cftools_bearer_token = reg_data.json()['token']
-            print(f'|| {datetime.datetime.now()} || Auth token received.') if self.__pycftools_debug else None
+            print(f'|| {datetime.datetime.now()} || Auth token received. - ~ {self.__api_cftools_bearer_token}') if self.__pycftools_debug else None
             return self.__api_cftools_bearer_token
         else:
             print(f'|| {datetime.datetime.now()} || Auth error reg_data status code : {reg_data.status_code}')
