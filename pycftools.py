@@ -299,7 +299,7 @@ class CfToolsApi(object):
         """
         Kick a player.
 
-        :param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+        :param gs_id: An active gamesession_id (See server_player_list() for details)
         :type gs_id: str
         :param reason: Reason 1-128 len max.
         :type reason: str
@@ -318,7 +318,7 @@ class CfToolsApi(object):
         """
         Send a private message to a player.
 
-        :param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+        :param gs_id: An active gamesession_id (See server_player_list() for details)
         :type gs_id: str
         :param content: Message content length: 1-256.
         :type content: str
@@ -365,7 +365,7 @@ class CfToolsApi(object):
         """
         Teleport a player GameLabs required Not all games supported.
 
-        :param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+        :param gs_id: An active gamesession_id (See server_player_list() for details)
         :type gs_id: str
         :param coords: Coordinates list{2}: [X, Y]
         :type coords: list
@@ -384,7 +384,7 @@ class CfToolsApi(object):
         """
         Spawn an object for player GameLabs required Not all games supported.
 
-        :param gs_id: An active gamesession_id (See cftools_api_get_server_list() for details)
+        :param gs_id: An active gamesession_id (See server_player_list() for details)
         :type gs_id: str
         :param obj_name: Object string.
         :type obj_name: str
